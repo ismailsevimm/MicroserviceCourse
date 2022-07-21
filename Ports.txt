@@ -1,4 +1,8 @@
 Ports
 
 	* Services
-		- Catalog : 5011
+		- Catalog		: 5011
+		- PhotoStock	: 5012
+
+	* Identity Server
+		- API			: 5001

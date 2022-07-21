@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSCourse.IdentityServer", "IdentityServer\MSCourse.IdentityServer\MSCourse.IdentityServer.csproj", "{350ED648-9216-4067-9736-09FE8189D348}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PhotoStock", "PhotoStock", "{DE3EAC22-5B4D-416A-B22A-DC261E5FF13C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSCourse.Services.PhotoStock", "Services\PhotoStock\MSCourse.Services.PhotoStock\MSCourse.Services.PhotoStock.csproj", "{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{350ED648-9216-4067-9736-09FE8189D348}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{350ED648-9216-4067-9736-09FE8189D348}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{350ED648-9216-4067-9736-09FE8189D348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,8 @@ Global
 		{64FC38F8-73A2-40EE-AA1D-540D14643B4F} = {EAE95AEA-1049-4B82-9FEA-C78C61606A70}
 		{85901AB8-492B-4812-A3DF-18F19625A70C} = {10A37D26-2A9E-4B6B-BABA-BEE477B6DB13}
 		{350ED648-9216-4067-9736-09FE8189D348} = {5A23F034-A326-4257-8FC4-DA158BE94A58}
+		{DE3EAC22-5B4D-416A-B22A-DC261E5FF13C} = {9FA74B20-7ADD-4409-8579-2FE04B4C9044}
+		{BC73D2FE-6871-4C2E-BE5B-4D92364DB80C} = {DE3EAC22-5B4D-416A-B22A-DC261E5FF13C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F51742A1-51D0-4DE5-AB2C-453C0C06D900}
