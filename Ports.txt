@@ -3,6 +3,18 @@ Ports
 	* Services
 		- Catalog		: 5011
 		- PhotoStock	: 5012
+		- Basket		: 5013
 
 	* Identity Server
 		- API			: 5001
+
+
+
+------------------------------------------------------------------------------------
+
+Main Ports
+
+	* Portainer		: 9000
+	* MongoDb		: 27017
+	* IdentityDb	: 1433
+	* RedisDb		: 6379
