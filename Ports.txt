@@ -4,6 +4,7 @@ Ports
 		- Catalog		: 5011
 		- PhotoStock	: 5012
 		- Basket		: 5013
+		- Discount		: 5014
 
 	* Identity Server
 		- API			: 5001
@@ -18,3 +19,4 @@ Main Ports
 	* MongoDb		: 27017
 	* IdentityDb	: 1433
 	* RedisDb		: 6379
+	* PostgreSQL	: 5432

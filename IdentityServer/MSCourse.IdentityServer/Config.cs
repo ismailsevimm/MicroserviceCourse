@@ -17,6 +17,7 @@ namespace MSCourse.IdentityServer
                 new ApiResource("resource_catalog"){Scopes={"catalog_fullpermission"}},
                 new ApiResource("resource_photo_stock"){Scopes={"photo_stock_fullpermission"}},
                 new ApiResource("resource_basket"){Scopes={"basket_fullpermission"}},
+                new ApiResource("resource_discount"){Scopes={"discount_fullpermission"}},
                 new ApiResource(IdentityServerConstants.LocalApi.ScopeName),
             };
         public static IEnumerable<IdentityResource> IdentityResources =>
@@ -39,6 +40,7 @@ namespace MSCourse.IdentityServer
                 new ApiScope("catalog_fullpermission", "Fullpermission for Catalog API"),
                 new ApiScope("photo_stock_fullpermission", "Fullpermission for Photo Stock API"),
                 new ApiScope("basket_fullpermission", "Fullpermission for Basket API"),
+                new ApiScope("discount_fullpermission", "Fullpermission for Discount API"),
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName),
             };
 
@@ -62,6 +64,7 @@ namespace MSCourse.IdentityServer
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes = {
                         "basket_fullpermission",
+                        "discount_fullpermission",
                         IdentityServerConstants.StandardScopes.OpenId, 
                         IdentityServerConstants.StandardScopes.Email, 
                         IdentityServerConstants.StandardScopes.Profile, 
