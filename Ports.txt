@@ -1,15 +1,18 @@
 Ports
 
+	* Gateway
+		- Port			: 5000
+
+	* Identity Server
+		- API			: 5001
+
 	* Services
 		- Catalog		: 5011
 		- PhotoStock	: 5012
 		- Basket		: 5013
 		- Discount		: 5014
-
-	* Identity Server
-		- API			: 5001
-
-
+		- Order			: 5015
+		- Payment		: 5016
 
 ------------------------------------------------------------------------------------
 
