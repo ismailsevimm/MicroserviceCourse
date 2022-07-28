@@ -14,6 +14,7 @@ namespace MSCourse.IdentityServer
         public static IEnumerable<ApiResource> ApiResources =>
             new ApiResource[]
             {
+                new ApiResource("resource_gateway"){Scopes={"gateway_fullpermission"}},
                 new ApiResource("resource_catalog"){Scopes={"catalog_fullpermission"}},
                 new ApiResource("resource_photo_stock"){Scopes={"photo_stock_fullpermission"}},
                 new ApiResource("resource_basket"){Scopes={"basket_fullpermission"}},
@@ -39,6 +40,7 @@ namespace MSCourse.IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
+                new ApiScope("gateway_fullpermission", "Fullpermission for Gateway API"),
                 new ApiScope("catalog_fullpermission", "Fullpermission for Catalog API"),
                 new ApiScope("photo_stock_fullpermission", "Fullpermission for Photo Stock API"),
                 new ApiScope("basket_fullpermission", "Fullpermission for Basket API"),
@@ -57,7 +59,12 @@ namespace MSCourse.IdentityServer
                     ClientId = "WebMvcClient",
                     ClientSecrets = { new Secret("secret".Sha256())},
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    AllowedScopes = { "catalog_fullpermission", "photo_stock_fullpermission", IdentityServerConstants.LocalApi.ScopeName}
+                    AllowedScopes = { 
+                        "gateway_fullpermission",
+                        "catalog_fullpermission",
+                        "photo_stock_fullpermission",
+                        IdentityServerConstants.LocalApi.ScopeName
+                    }
                 },
                 new Client
                 {
@@ -67,6 +74,7 @@ namespace MSCourse.IdentityServer
                     AllowOfflineAccess = true,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes = {
+                        "gateway_fullpermission",
                         "basket_fullpermission",
                         "discount_fullpermission",
                         "order_fullpermission",
