@@ -1,4 +1,5 @@
-﻿using MSCourse.Shared.Dtos;
+﻿using IdentityModel.Client;
+using MSCourse.Shared.Dtos;
 using MSCourse.Web.Models;
 using System.Threading.Tasks;
 
