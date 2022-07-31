@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSCourse.Web.Models.SettingModels;
+using MSCourse.Web.Services;
+using MSCourse.Web.Services.Interfaces;
+using System;
 
 namespace MSCourse.Web
 {
@@ -19,8 +23,22 @@ namespace MSCourse.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
+            services.AddHttpClient<IIdentityService, IdentityService>();
+
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                opt => {
+                    opt.LoginPath = "/Auth/SignIn";
+                    opt.ExpireTimeSpan = TimeSpan.FromDays(60);
+                    opt.SlidingExpiration = true;
+                    opt.Cookie.Name = "WebCookie";
+                });
+
             services.AddControllersWithViews();
         }
 
@@ -38,6 +56,8 @@ namespace MSCourse.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
