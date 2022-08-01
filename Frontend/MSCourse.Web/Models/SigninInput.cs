@@ -4,15 +4,15 @@ namespace MSCourse.Web.Models
 {
     public class SigninInput
     {
-        [Display(Name = "E-Posta adresiniz")]
+        [Display(Name = "Email Address")]
         [Required]
         public string Email { get; set; }
 
-        [Display(Name = "Şifreniz")]
+        [Display(Name = "Password")]
         [Required]
         public string Password { get; set; }
 
-        [Display(Name = "Beni hatırla")]
+        [Display(Name = "Remember Me?")]
         public bool IsRemember { get; set; }
     }
 }

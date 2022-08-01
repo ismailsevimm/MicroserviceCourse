@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@model List<CourseViewModel>
+
+<div class="row">
+    <div class="col-md-6 offset-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-header">Courses</h5>
+                @if (Model.Any())
+                {
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Picture
+                                </th>
+                                <th>
+                                    Course Name
+                                </th>
+                                <th>
+                                    Price
+                                </th>
+                                <th>
+                                    Duration
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @course.Picture
+                                    </td>
+                                    <td>
+                                        @course.Name
+                                    </td>
+                                    <td>
+                                        @course.Price
+                                    </td>
+                                    <td>
+                                        @course.Feature.Duration
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        Course not found
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
