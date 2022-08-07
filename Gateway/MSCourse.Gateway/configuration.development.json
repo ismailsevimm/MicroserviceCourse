@@ -4,7 +4,7 @@
 //http://localhost:5000/services/catalog/categories/getall
 {
   "Routes": [
-    {
+    { // http://localhost:5000/services/catalog/courses/GetAllByUserId/b5604e7d-91e6-4521-9104-c96eb6a15ed5
       "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

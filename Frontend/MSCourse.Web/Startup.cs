@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MSCourse.Shared.Services;
+using MSCourse.Shared.Services.Interfaces;
 using MSCourse.Web.Handlers;
 using MSCourse.Web.Models.SettingModels;
 using MSCourse.Web.Services;
@@ -28,18 +30,20 @@ namespace MSCourse.Web
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
 
             services.AddHttpContextAccessor();
+            services.AddAccessTokenManagement();
 
-            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
+            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();        
 
             services.AddScoped<ResourceOwnerPasswordTokenHandler>();
+            services.AddScoped<ClientCredentialTokenHandler>();
+            services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 
+            services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
             services.AddHttpClient<IIdentityService, IdentityService>();
-
             services.AddHttpClient<ICatalogService, CatalogService>(opt =>
             {
-                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.CatalogUrl.Path);
-            }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
-
+                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.CatalogUri.Path);
+            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
                 opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
