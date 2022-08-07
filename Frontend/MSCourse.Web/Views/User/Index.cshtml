@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 @model MSCourse.Web.Models.UserViewModel
@@ -14,16 +13,21 @@
                         <td class="text-dark">User Name</td>
                         <td class="text-dark">@Model.UserName</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="text-dark">Email Address</td>
                         <td class="text-dark">@Model.Email</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="text-dark">City</td>
                         <td class="text-dark">@Model.City</td>
                     </tr>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="list-group">
+            <a asp-controller="Courses" asp-action="Index" class="list-group-item list-group-item-action" aria-current="true">My Courses</a>
         </div>
     </div>
 </div>

@@ -19,7 +19,6 @@ namespace MSCourse.Services.Catalog.Controllers
         }
 
         //categories/
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -29,7 +28,6 @@ namespace MSCourse.Services.Catalog.Controllers
         }
 
         //categories/4
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -54,7 +52,7 @@ namespace MSCourse.Services.Catalog.Controllers
             return CreateActionResultInstance(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _categoryService.DeleteAsync(id);

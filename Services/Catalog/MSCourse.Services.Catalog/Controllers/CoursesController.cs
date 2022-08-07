@@ -40,7 +40,7 @@ namespace MSCourse.Services.Catalog.Controllers
 
         //api/courses/GetAllByUserId/a5s12-121f3-12svd-2as6g
         [HttpGet]
-        [Route("api/[controller]/GetAllByUserId/{userId}")]
+        [Route("/api/[controller]/GetAllByUserId/{userId}")]
         public async Task<IActionResult> GetAllByUserId(string userId)
         {
             var response = await _courseService.GetAllByUserIdAsync(userId);
@@ -50,7 +50,7 @@ namespace MSCourse.Services.Catalog.Controllers
         
         //api/courses/GetAllByCategoryId/as2576dgsd124sadfg
         [HttpGet]
-        [Route("api/[controller]/GetAllByCategoryId/{categoryId}")]
+        [Route("/api/[controller]/GetAllByCategoryId/{categoryId}")]
         public async Task<IActionResult> GetAllByCategoryId(string categoryId)
         {
             var response = await _courseService.GetAllByCategoryIdAsync(categoryId);
@@ -74,7 +74,7 @@ namespace MSCourse.Services.Catalog.Controllers
             return CreateActionResultInstance(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _courseService.DeleteAsync(id);

@@ -4,17 +4,18 @@
 @model List<CourseViewModel>
 
 <div class="row">
-    <div class="col-md-6 offset-md-6">
+    <div class="col-md-10 offset-1">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-header">Courses</h5>
-                @if (Model.Any())
+                <a class="btn btn-primary m-3" asp-controller="Courses" asp-action="Create">Add Course</a>
+                @if (Model != null && Model.Any())
                 {
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>
-                                    Picture
+                                    Category Name
                                 </th>
                                 <th>
                                     Course Name
@@ -25,6 +26,12 @@
                                 <th>
                                     Duration
                                 </th>
+                                <th>
+                                    Picture
+                                </th>                              
+                                <th>
+                                    Processes
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,7 +39,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @course.Picture
+                                        @course.Category.Name
                                     </td>
                                     <td>
                                         @course.Name
@@ -42,6 +49,13 @@
                                     </td>
                                     <td>
                                         @course.Feature.Duration
+                                    </td>
+                                    <td>
+                                        @course.Picture
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-success mr-1" asp-controller="Courses" asp-action="Update" asp-route-id="@course.Id">Update</a>
+                                        <a class="btn btn-outline-danger" asp-controller="Courses" asp-action="Delete" asp-route-id="@course.Id">Del</a>
                                     </td>
                                 </tr>
                             }
