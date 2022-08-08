@@ -84,6 +84,7 @@ namespace MSCourse.Web.Controllers
                 Feature = course.Feature,
                 Description = course.Description,
                 Picture = course.Picture,
+                PictureUrl = course.PictureUrl,
                 UserId = course.UserId,
                 CategoryId = course.CategoryId
             };

@@ -8,11 +8,17 @@ namespace MSCourse.Web.Models.CatalogModels
 
         public string Name { get; set; }
 
+        public string ShortName { get => Name.Length > 35 ? Name.Substring(0, 35) + "..." : Name; }
+
         public decimal Price { get; set; }
 
         public string Description { get; set; }
 
+        public string ShortDescription { get => Description.Length > 100 ? Description.Substring(0, 100) + "..." : Description; }
+
         public string Picture { get; set; }
+
+        public string PictureUrl { get; set; }
 
         public DateTime CreatedTime { get; set; }
 

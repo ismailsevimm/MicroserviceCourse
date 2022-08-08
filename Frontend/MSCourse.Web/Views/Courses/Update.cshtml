@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Update";
 }
 @model CourseUpdateInput
@@ -10,9 +9,9 @@
                 <h5 class="card-header">Course Detail</h5>
                 <form class="m-2" asp-controller="Courses" asp-action="Update" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly"></div>
-                    <input type="hidden" asp-for="Id"/>
-                    <input type="hidden" asp-for="UserId"/>
-                    <input type="hidden" asp-for="Picture"/>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Picture" />
                     <div class="mb-3">
                         <label class="form-label" asp-for="CategoryId"></label>
                         <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.categoryList">
@@ -38,6 +37,20 @@
                         <label class="form-label" asp-for="Feature.Duration"></label>
                         <input class="form-control" asp-for="Feature.Duration" />
                         <span class="text-danger" asp-validation-for="Feature.Duration"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="PictureUrl"></label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="@Model.PictureUrl" class=" form-control img-thumbnail" width="150" alt="photo" />
+                            </div>
+                        </div>
+                        
+                        <div class="m-2">
+                            <label class="form-label" asp-for="PhotoFormFile"></label>
+                            <input class="form-control" type="file" asp-for="PhotoFormFile" />
+                            <span class="text-danger" asp-validation-for="PhotoFormFile"></span>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Course</button>
                 </form>

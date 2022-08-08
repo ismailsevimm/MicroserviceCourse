@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using MSCourse.Shared.Services;
 using MSCourse.Shared.Services.Interfaces;
 using MSCourse.Web.Handlers;
+using MSCourse.Web.Helpers;
 using MSCourse.Web.Models.SettingModels;
 using MSCourse.Web.Services;
 using MSCourse.Web.Services.Interfaces;
@@ -32,7 +33,9 @@ namespace MSCourse.Web
             services.AddHttpContextAccessor();
             services.AddAccessTokenManagement();
 
-            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();        
+            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
+
+            services.AddSingleton<PhotoHelper>();
 
             services.AddScoped<ResourceOwnerPasswordTokenHandler>();
             services.AddScoped<ClientCredentialTokenHandler>();
@@ -42,7 +45,11 @@ namespace MSCourse.Web
             services.AddHttpClient<IIdentityService, IdentityService>();
             services.AddHttpClient<ICatalogService, CatalogService>(opt =>
             {
-                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.CatalogUri.Path);
+                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.Catalog.Path);
+            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+            services.AddHttpClient<IPhotoStockService, PhotoStockService>(opt =>
+            {
+                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.PhotoStock.Path);
             }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
             services.AddHttpClient<IUserService, UserService>(opt =>
             {

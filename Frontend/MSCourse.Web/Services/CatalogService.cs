@@ -1,4 +1,5 @@
 ﻿using MSCourse.Shared.Dtos;
+using MSCourse.Web.Helpers;
 using MSCourse.Web.Models.CatalogModels;
 using MSCourse.Web.Services.Interfaces;
 using System.Collections.Generic;
@@ -11,16 +12,27 @@ namespace MSCourse.Web.Services
     public class CatalogService : ICatalogService
     {
         private HttpClient _httpClient;
+        private readonly IPhotoStockService _photoStockService;
+        private readonly PhotoHelper _photoHelper;
 
-        public CatalogService(HttpClient httpClient)
+        public CatalogService(HttpClient httpClient, IPhotoStockService photoStockService, PhotoHelper photoHelper)
         {
             _httpClient = httpClient;
+            _photoStockService = photoStockService;
+            _photoHelper = photoHelper;
         }
 
 
         #region Course
         public async Task<bool> CreateCourseAsync(CourseCreateInput courseCreateInput)
         {
+            var photoResult = await _photoStockService.UploadPhoto(courseCreateInput.PhotoFormFile);
+
+            if (photoResult != null)
+            {
+                courseCreateInput.Picture = photoResult.Url;
+            }
+
             var clientResponse = await _httpClient.PostAsJsonAsync<CourseCreateInput>($"courses", courseCreateInput);
 
             return clientResponse.IsSuccessStatusCode;
@@ -28,6 +40,24 @@ namespace MSCourse.Web.Services
 
         public async Task<bool> UpdateCourseAsync(CourseUpdateInput courseUpdateInput)
         {
+            if (courseUpdateInput.PhotoFormFile != null)
+            {
+                var delPhotoResult = await _photoStockService.DeletePhoto(courseUpdateInput.Picture);
+
+                if (!delPhotoResult)
+                {
+                    return false;
+                }
+
+                var photoResult = await _photoStockService.UploadPhoto(courseUpdateInput.PhotoFormFile);
+
+                if (photoResult != null)
+                {
+                    courseUpdateInput.Picture = photoResult.Url;
+                }
+
+            }
+
             var clientResponse = await _httpClient.PutAsJsonAsync<CourseUpdateInput>($"courses", courseUpdateInput);
 
             return clientResponse.IsSuccessStatusCode;
@@ -51,6 +81,11 @@ namespace MSCourse.Web.Services
 
             var response = await clientResponse.Content.ReadFromJsonAsync<Response<List<CourseViewModel>>>();
 
+            response.Data.ForEach(co =>
+            {
+                co.PictureUrl = co.Picture != null ? _photoHelper.GetPhotoStockUrl(co.Picture) : null;
+            });
+
             return response.Data;
         }
 
@@ -64,6 +99,11 @@ namespace MSCourse.Web.Services
             }
 
             var response = await clientResponse.Content.ReadFromJsonAsync<Response<List<CourseViewModel>>>();
+
+            response.Data.ForEach(co =>
+            {
+                co.PictureUrl = co.Picture != null ? _photoHelper.GetPhotoStockUrl(co.Picture) : null;
+            });
 
             return response.Data;
         }
@@ -79,6 +119,11 @@ namespace MSCourse.Web.Services
 
             var response = await clientResponse.Content.ReadFromJsonAsync<Response<List<CourseViewModel>>>();
 
+            response.Data.ForEach(co =>
+            {
+                co.PictureUrl = co.Picture != null ? _photoHelper.GetPhotoStockUrl(co.Picture) : null;
+            });
+
             return response.Data;
         }
 
@@ -92,6 +137,8 @@ namespace MSCourse.Web.Services
             }
 
             var response = await clientResponse.Content.ReadFromJsonAsync<Response<CourseViewModel>>();
+
+            response.Data.PictureUrl = response.Data.Picture != null ? _photoHelper.GetPhotoStockUrl(response.Data.Picture) : null;
 
             return response.Data;
         }
@@ -108,7 +155,7 @@ namespace MSCourse.Web.Services
 
         public async Task<bool> UpdateCategoryAsync(CategoryUpdateInput categoryUpdateInput)
         {
-            var clientResponse = await _httpClient.PutAsJsonAsync<CategoryUpdateInput>("categories",categoryUpdateInput);
+            var clientResponse = await _httpClient.PutAsJsonAsync<CategoryUpdateInput>("categories", categoryUpdateInput);
 
             return clientResponse.IsSuccessStatusCode;
         }

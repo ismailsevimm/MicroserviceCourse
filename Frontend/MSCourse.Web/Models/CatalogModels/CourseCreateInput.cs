@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSCourse.Web.Models.CatalogModels
 {
@@ -17,6 +18,9 @@ namespace MSCourse.Web.Models.CatalogModels
 
         [Display(Name = "Picture")]
         public string Picture { get; set; }
+
+        [Display(Name="Picture")]
+        public IFormFile PhotoFormFile{ get; set; }
 
         [Display(Name = "User")]
         public string UserId { get; set; }

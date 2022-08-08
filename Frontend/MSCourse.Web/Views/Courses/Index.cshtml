@@ -15,6 +15,9 @@
                         <thead>
                             <tr>
                                 <th>
+                                    Picture
+                                </th>   
+                                <th>
                                     Category Name
                                 </th>
                                 <th>
@@ -26,9 +29,7 @@
                                 <th>
                                     Duration
                                 </th>
-                                <th>
-                                    Picture
-                                </th>                              
+                                                           
                                 <th>
                                     Processes
                                 </th>
@@ -38,6 +39,9 @@
                             @foreach (var course in Model)
                             {
                                 <tr>
+                                    <td>
+                                        <img src="@course.PictureUrl" class="img-thumbnail" width="72" alt="photo"/>
+                                    </td>
                                     <td>
                                         @course.Category.Name
                                     </td>
@@ -49,10 +53,7 @@
                                     </td>
                                     <td>
                                         @course.Feature.Duration
-                                    </td>
-                                    <td>
-                                        @course.Picture
-                                    </td>
+                                    </td>                                    
                                     <td>
                                         <a class="btn btn-outline-success mr-1" asp-controller="Courses" asp-action="Update" asp-route-id="@course.Id">Update</a>
                                         <a class="btn btn-outline-danger" asp-controller="Courses" asp-action="Delete" asp-route-id="@course.Id">Del</a>
