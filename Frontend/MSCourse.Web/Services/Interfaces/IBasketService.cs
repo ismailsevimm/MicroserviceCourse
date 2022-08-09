@@ -11,7 +11,7 @@ namespace MSCourse.Web.Services.Interfaces
 
         Task<bool> Delete();
 
-        Task<bool> AddBasketItem(BasketItemViewModel basketItemViewModel);
+        Task AddBasketItem(BasketItemViewModel basketItemViewModel);
 
         Task<bool> RemoveBasketItem(string productId);
 

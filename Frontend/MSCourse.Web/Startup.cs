@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,11 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSCourse.Shared.Services;
 using MSCourse.Shared.Services.Interfaces;
+using MSCourse.Web.Extensions;
 using MSCourse.Web.Handlers;
 using MSCourse.Web.Helpers;
 using MSCourse.Web.Models.SettingModels;
 using MSCourse.Web.Services;
 using MSCourse.Web.Services.Interfaces;
+using MSCourse.Web.Validators;
 using System;
 
 namespace MSCourse.Web
@@ -28,33 +32,22 @@ namespace MSCourse.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
+            
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
 
             services.AddHttpContextAccessor();
+
             services.AddAccessTokenManagement();
 
-            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
-
+            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
+            
+            services.AddScoped<ClientCredentialTokenHandler>();
+            
+            services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+            
             services.AddSingleton<PhotoHelper>();
 
-            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
-            services.AddScoped<ClientCredentialTokenHandler>();
-            services.AddScoped<ISharedIdentityService, SharedIdentityService>();
-
-            services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
-            services.AddHttpClient<IIdentityService, IdentityService>();
-            services.AddHttpClient<ICatalogService, CatalogService>(opt =>
-            {
-                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.Catalog.Path);
-            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
-            services.AddHttpClient<IPhotoStockService, PhotoStockService>(opt =>
-            {
-                opt.BaseAddress = new Uri(serviceApiSettings.GatewayBaseUri + serviceApiSettings.PhotoStock.Path);
-            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
-            services.AddHttpClient<IUserService, UserService>(opt =>
-            {
-                opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
-            }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+            services.AddHttpClientService(Configuration);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 CookieAuthenticationDefaults.AuthenticationScheme,
@@ -66,7 +59,8 @@ namespace MSCourse.Web
                     opt.Cookie.Name = "WebCookie";
                 });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddFluentValidation(fv=>fv.RegisterValidatorsFromAssemblyContaining<CourseCreateInputValidator>());
+            //services.AddValidatorsFromAssemblyContaining<CourseCreateInputValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
