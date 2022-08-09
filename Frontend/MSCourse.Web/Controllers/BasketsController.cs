@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSCourse.Web.Models.BasketModels;
+using MSCourse.Web.Models.DiscountModels;
 using MSCourse.Web.Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -11,11 +12,13 @@ namespace MSCourse.Web.Controllers
     {
         private readonly ICatalogService _catalogService;
         private readonly IBasketService _basketService;
+        private readonly IDiscountService _discountService;
 
-        public BasketsController(ICatalogService catalogService, IBasketService basketService)
+        public BasketsController(ICatalogService catalogService, IBasketService basketService, IDiscountService discountService)
         {
             _catalogService = catalogService;
             _basketService = basketService;
+            _discountService = discountService;
         }
 
         public async Task<IActionResult> Index()
@@ -49,5 +52,24 @@ namespace MSCourse.Web.Controllers
             
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> ApplyDiscount(DiscountApplyInput discountInput)
+        {
+            var discountStatus = await _basketService.ApplyDiscount(discountInput.Code);
+
+            TempData["discountStatus"] = discountStatus;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CancelApplyDiscount()
+        {
+            var discountStatus = await _basketService.CancelApplyDiscount();
+
+            TempData["discountStatus"] = discountStatus;
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

@@ -35,6 +35,6 @@ namespace MSCourse.Web.Models.BasketModels
 
         public decimal TotalPrice { get => _basketItems.Sum(x => x.GetCurrentPrice * x.Quantity); }
 
-        public bool HasDiscount { get => !string.IsNullOrEmpty(DiscountCode); }
+        public bool HasDiscount { get => !string.IsNullOrEmpty(DiscountCode) && DiscountRate.HasValue; }
     }
 }

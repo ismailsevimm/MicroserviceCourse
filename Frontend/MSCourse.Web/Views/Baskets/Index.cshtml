@@ -45,6 +45,26 @@
                         </tr>
 
                     </table>
+                    <form asp-controller="Baskets" asp-action="ApplyDiscount">
+                        @if (Model.HasDiscount)
+                        {
+                            <div class="alert alert-success">
+                                @Model.DiscountCode discount code applied.
+                            </div>
+                        }
+                        @if (TempData["discountStatus"] != null && !(bool)TempData["discountStatus"])
+                        {
+                            <div class="text-danger">
+                                Discount code expired or wrong.
+                            </div>
+                        }
+
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="text" name="DiscountApplyInput.Code"/>
+                            <div asp-validation-summary="All"></div>
+                            <button class="btn btn-outline-secondary"  type="submit">Apply</button>
+                        </div>
+                    </form>
                 }
             </div>
         </div>

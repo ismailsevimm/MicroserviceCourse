@@ -55,17 +55,17 @@ namespace MSCourse.Services.Discount.Controllers
         {
             return CreateActionResultInstance(await _discountService.GetById(id));
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetByUserId()
         {
             return CreateActionResultInstance(await _discountService.GetByUserId(_sharedIdentityService.GetUserId));
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetByCodeAndUserId(DiscountGetByCodeAndUserIdDto dto)
         {
-            return CreateActionResultInstance(await _discountService.GetByCodeAndUserId(dto.Code, dto.UserId!= null ? dto.UserId: _sharedIdentityService.GetUserId));
+            return CreateActionResultInstance(await _discountService.GetByCodeAndUserId(dto.Code, dto.UserId != null ? dto.UserId : _sharedIdentityService.GetUserId));
         }
     }
 }

@@ -11,10 +11,12 @@ namespace MSCourse.Web.Services
     public class BasketService : IBasketService
     {
         private readonly HttpClient _httpClient;
+        private readonly IDiscountService _discountService;
 
-        public BasketService(HttpClient httpClient)
+        public BasketService(HttpClient httpClient, IDiscountService discountService)
         {
             _httpClient = httpClient;
+            _discountService = discountService;
         }
 
         public async Task AddBasketItem(BasketItemViewModel basketItemViewModel)
@@ -23,7 +25,7 @@ namespace MSCourse.Web.Services
 
             if (basket != null)
             {
-                if (!basket.BasketItems.Any(x=>x.CourseId == basketItemViewModel.CourseId))
+                if (!basket.BasketItems.Any(x => x.CourseId == basketItemViewModel.CourseId))
                 {
                     basket.BasketItems.Add(basketItemViewModel);
                 }
@@ -40,12 +42,40 @@ namespace MSCourse.Web.Services
 
         public async Task<bool> ApplyDiscount(string discountCode)
         {
-            throw new System.NotImplementedException();
+            var cancelResult = await CancelApplyDiscount();
+
+            if (!cancelResult)
+                return false;
+
+            var basket = await Get();
+
+            if (basket == null || basket.DiscountCode == null)
+                return false;
+
+            var hasDiscount = await _discountService.Get(discountCode);
+
+            if (hasDiscount == null)
+                return false;
+
+            basket.DiscountRate = hasDiscount.Rate;
+            basket.DiscountCode = hasDiscount.Code;
+
+            return await SaveOrUpdate(basket);
+
         }
 
         public async Task<bool> CancelApplyDiscount()
         {
-            throw new System.NotImplementedException();
+            var basket = await Get();
+
+            if (basket == null || basket.DiscountCode == null)
+            {
+                return false;
+            }
+
+            basket.DiscountCode = null;
+
+            return await SaveOrUpdate(basket);
         }
 
         public async Task<bool> Delete()
@@ -102,7 +132,7 @@ namespace MSCourse.Web.Services
 
         public async Task<bool> SaveOrUpdate(BasketViewModel basketViewModel)
         {
-            var response = await _httpClient.PostAsJsonAsync<BasketViewModel>("baskets",basketViewModel);
+            var response = await _httpClient.PostAsJsonAsync<BasketViewModel>("baskets", basketViewModel);
 
             return response.IsSuccessStatusCode;
         }
