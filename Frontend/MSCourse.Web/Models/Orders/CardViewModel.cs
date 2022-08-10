@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSCourse.Web.Models.PaymentModels
+namespace MSCourse.Web.Models.Orders
 {
-    public class PayWithCardInput
+    public class CardViewModel
     {
         [Display(Name = "Card Name")]
         public string CardName { get; set; }
@@ -15,8 +15,5 @@ namespace MSCourse.Web.Models.PaymentModels
 
         [Display(Name = "CVV")]
         public string CVV { get; set; }
-
-        [Display(Name = "Total Price")]
-        public decimal TotalPrice { get; set; }
     }
 }
