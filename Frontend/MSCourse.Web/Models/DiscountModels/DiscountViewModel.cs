@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSCourse.Web.Models.DiscountModels
 {
@@ -11,5 +12,8 @@ namespace MSCourse.Web.Models.DiscountModels
 
         [Display(Name = "Code")]
         public string Code { get; set; }
+
+        [Display(Name = "End Time")]
+        public DateTime ActivationEndTime { get; set; }
     }
 }

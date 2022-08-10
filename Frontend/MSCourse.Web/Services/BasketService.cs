@@ -1,6 +1,7 @@
 ﻿using MSCourse.Shared.Dtos;
 using MSCourse.Web.Models.BasketModels;
 using MSCourse.Web.Services.Interfaces;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -49,16 +50,15 @@ namespace MSCourse.Web.Services
 
             var basket = await Get();
 
-            if (basket == null || basket.DiscountCode == null)
+            if (basket == null)
                 return false;
 
             var hasDiscount = await _discountService.Get(discountCode);
 
-            if (hasDiscount == null)
+            if (hasDiscount == null || hasDiscount.ActivationEndTime <= DateTime.Now)
                 return false;
 
-            basket.DiscountRate = hasDiscount.Rate;
-            basket.DiscountCode = hasDiscount.Code;
+            basket.ApplyDiscount(hasDiscount.Code, hasDiscount.Rate);
 
             return await SaveOrUpdate(basket);
 
@@ -68,12 +68,12 @@ namespace MSCourse.Web.Services
         {
             var basket = await Get();
 
-            if (basket == null || basket.DiscountCode == null)
+            if (basket == null)
             {
                 return false;
             }
 
-            basket.DiscountCode = null;
+            basket.CancelDiscount();
 
             return await SaveOrUpdate(basket);
         }
@@ -124,7 +124,7 @@ namespace MSCourse.Web.Services
 
             if (!basket.BasketItems.Any())
             {
-                basket.DiscountCode = null;
+                basket.CancelDiscount();
             }
 
             return await SaveOrUpdate(basket);

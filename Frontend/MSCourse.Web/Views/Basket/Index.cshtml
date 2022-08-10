@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@model BasketViewModel
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Cart</h5>
+
+                @if (Model == null && !Model.BasketItems.Any())
+                {
+                    <div class="alert alert-info">Cart is empty</div>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Name</th>
+                            @if (Model.HasDiscount)
+                            {
+                                <th>Discounted Price</th>
+                                <th>Price</th>
+                            }
+                            else
+                            {
+                                <th>Price</th>
+                            }
+                            <th>Processes</th>
+                        </tr>
+                        @foreach (var product in Model.BasketItems)
+                        {
+                            <tr>
+                                <td>@product.CourseName</td>
+                                @if (Model.HasDiscount)
+                                {
+                                    <td>@product.GetCurrentPrice ₺ @(Model.HasDiscount ? $"(%{Model.DiscountRate.Value} applied)": "")</td>
+                                    <td><del>@product.Price ₺</del></td>
+                                }
+                                else
+                                {
+                                    <td>@product.GetCurrentPrice ₺</td>
+                                }
+                                <td>
+                                    <a class="btn btn-danger" asp-controller="Basket" asp-action="RemoveBasketItem" asp-route-courseId="@product.CourseId">Del</a>
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.HasDiscount)
+                        {
+                            <tr>
+                                <th>Discount Rate</th>
+                                <th colspan="3">%@Model.DiscountRate</th>
+                            </tr>
+                        }
+
+                        <tr>
+                            <th>@(Model.HasDiscount ? "Discount Price": "Total Price")</th>
+                            <th colspan="3">@Model.TotalPrice ₺</th>
+                        </tr>
+
+                    </table>
+                    <form asp-controller="Basket" asp-action="ApplyDiscount">
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="text" name="discountInput.Code" aria-describedby="button-addon2" />
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Apply</button>
+                        </div>
+                        @if (Model.HasDiscount)
+                        {
+                            <div class="alert alert-success">
+                                "@Model.DiscountCode" discount code applied.
+                                <a asp-controller="Basket" asp-action="CancelApplyDiscount" class="text-danger"> (Cancel Discount) </a>
+                            </div>
+                        }
+                        @if (TempData["discountError"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["discountError"]
+                            </div>
+                        }
+                        @if (TempData["discountStatus"] != null && !(bool)TempData["discountStatus"])
+                        {
+                            <div class="alert alert-danger">
+                                Discount code expired or incorrect.
+                            </div>
+                        }
+                    </form>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
