@@ -60,7 +60,7 @@ namespace MSCourse.Web.Services
                 }
             };
 
-            
+
 
             foreach (var item in basket.BasketItems)
             {
@@ -76,7 +76,7 @@ namespace MSCourse.Web.Services
 
                 orderCreateInput.OrderItems.Add(orderItem);
             }
-            
+
             var response = await _httpClient.PostAsJsonAsync<OrderCreateInput>("orders", orderCreateInput);
 
             if (!response.IsSuccessStatusCode)
@@ -100,9 +100,58 @@ namespace MSCourse.Web.Services
             return response.Data;
         }
 
-        public Task SuspendOrder(CheckoutInfoInput checkoutInfoInput)
+        public async Task<OrderSuspendViewModel> SuspendOrder(CheckoutInfoInput checkoutInfoInput)
         {
-            throw new System.NotImplementedException();
+            var basket = await _basketService.Get();
+
+            OrderCreateInput orderCreateInput = new()
+            {
+                BuyerId = _sharedIdentityService.GetUserId,
+                Address = new AddressViewModel
+                {
+                    Province = checkoutInfoInput.Address.Province,
+                    District = checkoutInfoInput.Address.District,
+                    Street = checkoutInfoInput.Address.Street,
+                    ZipCode = checkoutInfoInput.Address.ZipCode,
+                    Line = checkoutInfoInput.Address.Line
+                }
+            };
+
+            foreach (var item in basket.BasketItems)
+            {
+                var course = await _catalogService.GetByCourseIdAsync(item.CourseId);
+
+                var orderItem = new OrderItemViewModel
+                {
+                    ProductId = item.CourseId,
+                    ProductName = item.CourseName,
+                    Price = item.GetCurrentPrice,
+                    PictureUrl = course.PictureUrl
+                };
+
+                orderCreateInput.OrderItems.Add(orderItem);
+            }
+
+            PayWithCardInput paymentInfoInput = new()
+            {
+                CardName = checkoutInfoInput.Card.CardName,
+                CardNumber = checkoutInfoInput.Card.CardNumber,
+                CVV = checkoutInfoInput.Card.CVV,
+                Expiration = checkoutInfoInput.Card.Expiration,
+                TotalPrice = basket.TotalPrice,
+                Order = orderCreateInput
+            };
+
+            var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
+
+            if (!responsePayment)
+            {
+                return new() { Error = "Payment failed.", IsSuccessful = false };
+            }
+
+            await _basketService.Delete();
+
+            return new() { IsSuccessful = true };
         }
     }
 }

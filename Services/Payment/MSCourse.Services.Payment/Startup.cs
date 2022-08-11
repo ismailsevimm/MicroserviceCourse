@@ -37,7 +37,7 @@ namespace MSCourse.Services.Payment
                 });
             });
 
-            //services.AddMassTransitHostedService();
+            services.AddMassTransitHostedService();
 
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");

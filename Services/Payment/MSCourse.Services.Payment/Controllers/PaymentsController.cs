@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using MSCourse.Services.Payment.Models;
 using MSCourse.Shared.ControllerBases;
-using MSCourse.Shared.Dtos;
-using MSCourse.Shared.Services.Interfaces;
+using MSCourse.Shared.MessageQueries;
+using System.Threading.Tasks;
 
 namespace MSCourse.Services.Payment.Controllers
 {
@@ -10,17 +11,45 @@ namespace MSCourse.Services.Payment.Controllers
     [ApiController]
     public class PaymentsController : CustomControllerBase
     {
-        private readonly ISharedIdentityService _sharedIdentityService;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
 
-        public PaymentsController(ISharedIdentityService sharedIdentityService)
+        public PaymentsController(ISendEndpointProvider sendEndpointProvider)
         {
-            _sharedIdentityService = sharedIdentityService;
+            _sendEndpointProvider = sendEndpointProvider;
         }
 
         [HttpPost]
-        public IActionResult ReceivePayment(PaymentDto paymentDto)
+        public async Task<IActionResult> ReceivePayment(PaymentDto paymentDto)
         {
-            return CreateActionResultInstance(Response<string>.Success(_sharedIdentityService.GetUserId,200));
+            var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new System.Uri("queue:create-order-service"));
+
+            CreateOrderMessageCommand createOrderMessageCommand = new()
+            {
+                BuyerId = paymentDto.Order.BuyerId,
+                Address = new Address
+                {
+                    Province = paymentDto.Order.Address.Province,
+                    District = paymentDto.Order.Address.District,
+                    Street = paymentDto.Order.Address.Street,
+                    Line = paymentDto.Order.Address.Line,
+                    ZipCode = paymentDto.Order.Address.ZipCode
+                }
+            };
+
+            paymentDto.Order.OrderItems.ForEach(item =>
+            {
+                createOrderMessageCommand.OrderItems.Add(new OrderItem
+                {
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    PictureUrl = item.PictureUrl,
+                    Price = item.Price
+                });
+            });
+
+            await sendEndpoint.Send<CreateOrderMessageCommand>(createOrderMessageCommand);
+
+            return CreateActionResultInstance(Shared.Dtos.Response<string>.Success(200));
         }
     }
 }

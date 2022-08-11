@@ -6,6 +6,10 @@ namespace MSCourse.Shared.MessageQueries
 {
     public class CreateOrderMessageCommand
     {
+        public CreateOrderMessageCommand()
+        {
+            this.OrderItems = new List<OrderItem>();
+        }
         public string BuyerId { get; set; }
 
         public Address Address { get; set; }

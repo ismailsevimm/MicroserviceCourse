@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MSCourse.Web.Models.OrderModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSCourse.Web.Models.PaymentModels
 {
@@ -18,5 +19,8 @@ namespace MSCourse.Web.Models.PaymentModels
 
         [Display(Name = "Total Price")]
         public decimal TotalPrice { get; set; }
+
+        [Display(Name = "Order")]
+        public OrderCreateInput Order { get; set; }
     }
 }
