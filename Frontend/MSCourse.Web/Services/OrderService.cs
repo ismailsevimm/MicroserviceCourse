@@ -1,7 +1,11 @@
-﻿using MSCourse.Web.Models.Orders;
+﻿using MSCourse.Shared.Dtos;
+using MSCourse.Shared.Services.Interfaces;
+using MSCourse.Web.Models.Orders;
+using MSCourse.Web.Models.PaymentModels;
 using MSCourse.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace MSCourse.Web.Services
@@ -9,20 +13,91 @@ namespace MSCourse.Web.Services
     public class OrderService : IOrderService
     {
         private readonly HttpClient _httpClient;
+        private readonly IPaymentService _paymentService;
+        private readonly IBasketService _basketService;
+        private readonly ISharedIdentityService _sharedIdentityService;
+        private readonly ICatalogService _catalogService;
 
-        public OrderService(HttpClient httpClient)
+        public OrderService(HttpClient httpClient, IPaymentService paymentService, IBasketService basketService, ISharedIdentityService sharedIdentityService, ICatalogService catalogService)
         {
             _httpClient = httpClient;
+            _paymentService = paymentService;
+            _basketService = basketService;
+            _sharedIdentityService = sharedIdentityService;
+            _catalogService = catalogService;
         }
 
-        public Task<OrderCreatedViewModel> Create(CheckoutInfoInput checkoutInfoInput)
+        public async Task<OrderCreatedViewModel> Create(CheckoutInfoInput checkoutInfoInput)
         {
-            throw new System.NotImplementedException();
+            var basket = await _basketService.Get();
+
+            PayWithCardInput paymentInfoInput = new()
+            {
+                CardName = checkoutInfoInput.Card.CardName,
+                CardNumber = checkoutInfoInput.Card.CardNumber,
+                CVV = checkoutInfoInput.Card.CVV,
+                Expiration = checkoutInfoInput.Card.Expiration,
+                TotalPrice = basket.TotalPrice
+            };
+
+            var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
+
+            if (!responsePayment)
+            {
+                return new() { Error = "Payment failed.", IsSuccessful = false };
+            }
+
+            OrderCreateInput orderCreateInput = new()
+            {
+                BuyerId = _sharedIdentityService.GetUserId,
+                Address = new AddressViewModel
+                {
+                    Province = checkoutInfoInput.Address.Province,
+                    District = checkoutInfoInput.Address.District,
+                    Street = checkoutInfoInput.Address.Street,
+                    ZipCode = checkoutInfoInput.Address.ZipCode,
+                    Line = checkoutInfoInput.Address.Line
+                }
+            };
+
+            
+
+            foreach (var item in basket.BasketItems)
+            {
+                var course = await _catalogService.GetByCourseIdAsync(item.CourseId);
+
+                var orderItem = new OrderItemViewModel
+                {
+                    ProductId = item.CourseId,
+                    ProductName = item.CourseName,
+                    Price = item.GetCurrentPrice,
+                    PictureUrl = course.PictureUrl
+                };
+
+                orderCreateInput.OrderItems.Add(orderItem);
+            }
+            
+            var response = await _httpClient.PostAsJsonAsync<OrderCreateInput>("orders", orderCreateInput);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new() { Error = "Payment failed.", IsSuccessful = false };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<Response<OrderCreatedViewModel>>();
+
+            result.Data.IsSuccessful = true;
+
+            await _basketService.Delete();
+
+            return result.Data;
         }
 
-        public Task<List<OrderViewModel>> GetOrder()
+        public async Task<List<OrderViewModel>> GetOrder()
         {
-            throw new System.NotImplementedException();
+            var response = await _httpClient.GetFromJsonAsync<Response<List<OrderViewModel>>>("orders");
+
+            return response.Data;
         }
 
         public Task SuspendOrder(CheckoutInfoInput checkoutInfoInput)

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSCourse.Services.Order.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : CustomControllerBase
     {

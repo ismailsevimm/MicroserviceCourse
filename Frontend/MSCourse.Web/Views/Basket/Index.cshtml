@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title">Cart</h5>
 
-                @if (Model == null && !Model.BasketItems.Any())
+                @if (Model == null || !Model.BasketItems.Any())
                 {
                     <div class="alert alert-info">Cart is empty</div>
                 }
@@ -86,6 +86,9 @@
                             </div>
                         }
                     </form>
+
+                    <a class="btn btn-success" asp-controller="Orders" asp-action="Checkout">Payment Properties</a>
+                    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Search Another Courses</a>
                 }
             </div>
         </div>

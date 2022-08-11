@@ -18,7 +18,7 @@ namespace MSCourse.Web.Services
 
         public async Task<bool> ReceivePayment(PayWithCardInput payWithCardInput)
         {
-            var response = await _httpClient.PostAsJsonAsync<PayWithCardInput>("payments",payWithCardInput);
+            var response = await _httpClient.PostAsJsonAsync<PayWithCardInput>("payments", payWithCardInput);
 
             return response.IsSuccessStatusCode;
         }

@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Successful";
+}
+
+@if (ViewBag.orderId != null)
+{
+    <div class="alert alert-info">
+        <p>
+            Order(Payment) completed successfully
+        </p>
+        <p>
+            Order(Payment) No: @ViewBag.orderId
+        </p>
+    </div>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Home</a>
+}
+else
+{
+    <div class="alert alert-danger">
+        <p>
+            There was a error. Order didn't completed.
+        </p>
+    </div>
+}
+

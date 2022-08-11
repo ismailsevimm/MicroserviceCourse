@@ -6,7 +6,7 @@ using MSCourse.Shared.Services.Interfaces;
 
 namespace MSCourse.Services.Payment.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PaymentsController : CustomControllerBase
     {
