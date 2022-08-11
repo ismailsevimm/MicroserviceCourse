@@ -73,7 +73,7 @@ namespace MSCourse.Web.Controllers
                 return View();
             }
 
-            return RedirectToAction(nameof(Successful), new { orderId = new Random().Next(1,1000000) });
+            return RedirectToAction(nameof(Successful), new { orderId = new Random().Next(1, 1000000) });
         }
 
         public IActionResult Successful(int orderId)
@@ -81,6 +81,11 @@ namespace MSCourse.Web.Controllers
             ViewBag.orderId = orderId;
 
             return View();
+        }
+
+        public async Task<IActionResult> CheckoutHistory()
+        {
+            return View(await _orderService.GetOrder());
         }
     }
 }

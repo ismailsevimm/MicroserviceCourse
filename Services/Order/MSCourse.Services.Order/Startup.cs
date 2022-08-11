@@ -1,24 +1,20 @@
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MSCourse.Services.Order.Application.Consumers;
 using MSCourse.Services.Order.Infrastructure;
 using MSCourse.Shared.Services;
 using MSCourse.Shared.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSCourse.Services.Order
 {
@@ -34,6 +30,26 @@ namespace MSCourse.Services.Order
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMassTransit(x => {
+
+                x.AddConsumer<CreateOrderMessageCommandConsumer>();
+
+                //Default Port : 5672;
+                x.UsingRabbitMq((context, config) =>
+                {
+                    config.Host(Configuration["RabbitMQUrl"], "/", host => {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+
+                    config.ReceiveEndpoint("create-order-service", e => {
+                        e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
+
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>

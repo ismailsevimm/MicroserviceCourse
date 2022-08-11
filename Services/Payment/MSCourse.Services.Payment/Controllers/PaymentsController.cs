@@ -36,16 +36,18 @@ namespace MSCourse.Services.Payment.Controllers
                 }
             };
 
-            paymentDto.Order.OrderItems.ForEach(item =>
+            foreach (var item in paymentDto.Order.OrderItems)
             {
-                createOrderMessageCommand.OrderItems.Add(new OrderItem
+                var orderItem = new OrderItem
                 {
                     ProductId = item.ProductId,
                     ProductName = item.ProductName,
                     PictureUrl = item.PictureUrl,
                     Price = item.Price
-                });
-            });
+                };
+
+                createOrderMessageCommand.OrderItems.Add(orderItem);
+            }
 
             await sendEndpoint.Send<CreateOrderMessageCommand>(createOrderMessageCommand);
 
