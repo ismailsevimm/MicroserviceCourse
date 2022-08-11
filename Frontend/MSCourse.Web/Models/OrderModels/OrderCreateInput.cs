@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MSCourse.Web.Models.Orders
+namespace MSCourse.Web.Models.OrderModels
 {
     public class OrderCreateInput
     {

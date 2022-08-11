@@ -1,6 +1,6 @@
 ﻿using MSCourse.Shared.Dtos;
 using MSCourse.Shared.Services.Interfaces;
-using MSCourse.Web.Models.Orders;
+using MSCourse.Web.Models.OrderModels;
 using MSCourse.Web.Models.PaymentModels;
 using MSCourse.Web.Services.Interfaces;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSCourse.Web.Models.Orders
+namespace MSCourse.Web.Models.OrderModels
 {
     public class CheckoutInfoInput
     {

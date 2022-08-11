@@ -1,4 +1,4 @@
-﻿namespace MSCourse.Web.Models.Orders
+﻿namespace MSCourse.Web.Models.OrderModels
 {
     public class OrderItemViewModel
     {

@@ -18,7 +18,7 @@ namespace MSCourse.Services.Payment.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReceivePayment(PayWithCard payWithCard)
+        public IActionResult ReceivePayment(PaymentDto paymentDto)
         {
             return CreateActionResultInstance(Response<string>.Success(_sharedIdentityService.GetUserId,200));
         }

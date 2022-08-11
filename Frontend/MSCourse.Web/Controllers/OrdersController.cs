@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSCourse.Web.Models.Orders;
+using MSCourse.Web.Models.OrderModels;
 using MSCourse.Web.Services.Interfaces;
 using System.Threading.Tasks;
 

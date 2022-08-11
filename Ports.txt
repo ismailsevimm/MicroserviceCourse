@@ -26,3 +26,4 @@ Main Ports
 	* IdentityDb	: 1433
 	* RedisDb		: 6379
 	* PostgreSQL	: 5432
+	* RabbitMQ		: 5672

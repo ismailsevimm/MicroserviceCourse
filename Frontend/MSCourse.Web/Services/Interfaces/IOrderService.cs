@@ -1,4 +1,4 @@
-﻿using MSCourse.Web.Models.Orders;
+﻿using MSCourse.Web.Models.OrderModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
