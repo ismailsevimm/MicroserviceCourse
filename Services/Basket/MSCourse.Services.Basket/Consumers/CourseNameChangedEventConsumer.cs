@@ -31,7 +31,9 @@ namespace MSCourse.Services.Basket.Consumers
                 var basketItems = basket.BasketItems.Where(x => x.CourseId == context.Message.CourseId).ToList();
 
                 basketItems.ForEach(item => {
+
                     item.CourseName = context.Message.UpdatedCourseName;
+
                 });
 
                 basket.BasketItems = basketItems;
