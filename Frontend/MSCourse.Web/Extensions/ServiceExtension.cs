@@ -13,7 +13,6 @@ namespace MSCourse.Web.Extensions
         public static void AddHttpClientService(this IServiceCollection services, IConfiguration Configuration)
         {
             var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
-
             services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
 
             services.AddHttpClient<IIdentityService, IdentityService>();
