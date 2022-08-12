@@ -36,7 +36,6 @@ namespace MSCourse.Services.Payment
                     });
                 });
             });
-
             services.AddMassTransitHostedService();
 
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

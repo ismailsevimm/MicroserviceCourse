@@ -27,6 +27,11 @@ namespace MSCourse.Services.Order.Domain.OrderAggregate
             PictureUrl = pictureUrl;
             Price = price;
         }
+
+        public void UpdateProductName(string productName)
+        {
+            ProductName = productName;
+        }
     }
 
 }

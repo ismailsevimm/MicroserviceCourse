@@ -33,6 +33,7 @@ namespace MSCourse.Services.Order
             services.AddMassTransit(x => {
 
                 x.AddConsumer<CreateOrderMessageCommandConsumer>();
+                x.AddConsumer<CourseNameChangedEventConsumer>();
 
                 //Default Port : 5672;
                 x.UsingRabbitMq((context, config) =>
@@ -45,9 +46,13 @@ namespace MSCourse.Services.Order
                     config.ReceiveEndpoint("create-order-service", e => {
                         e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
                     });
+                    
+                    config.ReceiveEndpoint("course-name-changed-event-order-service", e => {
+                        e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
+                    });
+
                 });
             });
-
             services.AddMassTransitHostedService();
 
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

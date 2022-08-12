@@ -32,7 +32,11 @@
                         @foreach (var product in Model.BasketItems)
                         {
                             <tr>
-                                <td>@product.CourseName</td>
+                                <td>
+                                    <a class="btn btn-link" asp-controller="Home" asp-action="Detail" asp-route-id="@product.CourseId">
+                                        @product.CourseName
+                                    </a>
+                                </td>
                                 @if (Model.HasDiscount)
                                 {
                                     <td>@product.GetCurrentPrice ₺ @(Model.HasDiscount ? $"(%{Model.DiscountRate.Value} applied)": "")</td>
